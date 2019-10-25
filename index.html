@@ -1,0 +1,132 @@
+<!-- 
+		Name: <Yadwinder Singh>
+		Date: <07/09/2019>
+		Class: CSCI2447, Javascript Fundamentals
+		Project X
+ -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<title>Whack-A-Mole (CSCI2447)</title>
+
+	<!-- CSS styles: This is for me to worry about; not you. -->
+	<link href="css/game.css" rel="stylesheet" />
+	<script src="js/jquery.js"></script>
+
+</head>
+
+<body>
+
+	<div id="content">
+
+		<h1>Whack-A-Mole</h1>
+
+		<p>After clicking "start", you will have 30 seconds to click
+			as many moles as you can. The moles appear randomly so be ready! </p>
+
+		<div id="controls">
+			<span id="score">0 pts</span>
+			<button type="button" id="start_button">Start!</button>
+		</div>
+
+		<div id="timer"> seconds left</div>
+
+		<div id="gamespace">
+
+		</div>
+	</div>
+	<script>
+
+		var score = 0;
+		var secs = 30;
+		
+
+		
+		$('#start_button').click(function () {
+			startGame();
+			$('#start_button').attr("disabled", true);
+		});
+
+		function getY() {
+			return Math.floor((Math.random() * 317));
+		};
+
+		function getX() {
+			return Math.floor((Math.random() * 500));
+		};
+
+		function moleTime() {
+			return Math.floor((Math.random() * 2001) + 500);
+		};
+
+		function moleDeath() {
+			return Math.floor((Math.random() * 1501) + 500);
+		};
+
+		function updateScore() {
+			score++;
+			$('#score').html(score + ' pts');
+		};
+
+		function startGame() {
+			countDown();
+			$('#timer').show('slow', 'linear');
+			$('h1').css('color', 'green');
+			$('#gamespace').css('background-color', 'lightblue');
+
+			
+			$('#gamespace').on('click', 'img', function () {
+				if (secs == 0) {
+					$('#gamespace').off('click');
+				};
+				updateScore();
+				$(this).remove();
+			});
+			addMole();
+			removeMole();
+
+		};
+
+
+		function countDown() {
+			var timer = setInterval(function () {
+				secs--;
+				$('#timer').html(secs + ' seconds left');
+				if (secs <= 0) {
+					clearInterval(timer);
+					alert('Your Score Is ' + score) ? "" : location.reload();
+				}
+			}, 1000);
+		};
+
+		function addMole() {
+			var count = 0;
+			var timer = setInterval(function () {
+				$('#gamespace').append('<img id="p' + count + '" src="img/mole.jpg" style="top:' + getY() + 'px;left:' + getX() + 'px;"/>');
+				count++;
+				if (secs <= 0) {
+					clearInterval(timer);
+				}
+			}, moleTime());
+		};
+
+		function removeMole() {
+			var i = 0;
+			var timer = setInterval(function () {
+				$("#p" + i).remove()
+				i++;
+				if (secs <= 0) {
+					clearInterval(timer);
+				}
+			}, moleDeath());
+		};
+
+
+	</script>
+
+</body>
+
+</html>
